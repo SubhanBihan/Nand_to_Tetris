@@ -1,4 +1,0 @@
-# Project 0
-
-The purpose of project 0 is to get you to download the course's tools.
-Great job!
