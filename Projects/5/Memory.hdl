@@ -1,0 +1,46 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+/**
+ * The complete address space of the Hack computer's memory,
+ * including RAM and memory-mapped I/O. 
+ * The chip facilitates read and write operations, as follows:
+ *     Read:  out(t) = Memory[address(t)](t)
+ *     Write: if load(t-1) then Memory[address(t-1)](t) = in(t-1)
+ * In words: the chip always outputs the value stored at the memory 
+ * location specified by address. If load=1, the in value is loaded 
+ * into the memory location specified by address. This value becomes 
+ * available through the out output from the next time step onward.
+ * Address space rules:
+ * Only the upper 16K+8K+1 words of the Memory chip are used. 
+ * Access to address>0x6000 is invalid. Access to any address in 
+ * the range 0x4000-0x5FFF results in accessing the screen memory 
+ * map. Access to address 0x6000 results in accessing the keyboard 
+ * memory map. The behavior in these addresses is described in the Screen
+ * and Keyboard chip specifications given in the lectures and the book.
+ */
+CHIP Memory {
+    IN in[16], load, address[15];
+    OUT out[16];
+
+    PARTS:
+    DMux(in= load, sel= address[14], a= RAML, b= nRAML);
+    Not(in= address[13], out= naddr13);
+    And(a= nRAML, b= naddr13, out= SCRL);
+	
+    RAM16K(in= in, load= RAML, address= address[0..13], out= RAMO);
+    Screen(in= in, load= SCRL, address= address[0..12], out= SCRO);
+    Keyboard(out= KBDO);
+
+
+    And(a= address[14], b= address[13], out= s0);
+
+    Or8Way(in= address[0..7], out= b01);
+    Or8Way(in= address[5..12], out= b02);
+    Or(a= b01, b= b02, out= b0);
+    And(a= address[14], b= naddr13, out= s10);
+    And(a= s0, b= b0, out= s11);
+    Or(a= s10, b= s11, out= s1);
+
+    Mux4Way16(a= RAMO, b= KBDO, c= SCRO, d= false, sel[1]= s1, sel[0]= s0, out= out);
+}

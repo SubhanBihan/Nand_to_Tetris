@@ -1,0 +1,197 @@
+/**
+ * Maze Escape - Nand2Tetris Project 9
+ *
+ * A small interactive maze game written in Jack.
+ * The player controls a square with the arrow keys and must reach
+ * the EXIT area without walking through a wall.
+ *
+ * Controls:
+ *   Arrow keys - move the player
+ *   Q         - quit the game
+ */
+class Main {
+
+    /** Starts the game and handles keyboard input. */
+    function void main() {
+        var int x, y, key, nextX, nextY;
+
+        let x = 20;
+        let y = 30;
+
+        do Screen.clearScreen();
+        do Main.drawMaze();
+        do Main.drawPlayer(x, y);
+
+        while (true) {
+            let key = Keyboard.readKey();
+
+            if (key = 81) {
+                return;
+            }
+
+            let nextX = x;
+            let nextY = y;
+
+            if (key = 130) {
+                let nextX = x - 6;
+            }
+            if (key = 132) {
+                let nextX = x + 6;
+            }
+            if (key = 131) {
+                let nextY = y - 6;
+            }
+            if (key = 133) {
+                let nextY = y + 6;
+            }
+
+            if ((nextX > 10) & (nextX < 302)) {
+                if ((nextY > 10) & (nextY < 238)) {
+                    if (~(Main.isWall(nextX, nextY))) {
+                        let x = nextX;
+                        let y = nextY;
+                    }
+                }
+            }
+
+            do Main.drawMaze();
+            do Main.drawPlayer(x, y);
+
+            if ((x > 270) & (y > 210)) {
+                do Main.gameOver();
+                return;
+            }
+        }
+
+        return;
+    }
+
+    /** Draws the maze, title, instructions, and exit. */
+    function void drawMaze() {
+        do Screen.clearScreen();
+
+        do Output.moveCursor(0, 0);
+        do Output.printString("MAZE ESCAPE");
+        do Output.moveCursor(1, 0);
+        do Output.printString("Arrow keys: Move   Q: Quit");
+
+        // Outer border.
+        do Screen.setColor(true);
+        do Screen.drawRectangle(10, 10, 310, 15);
+        do Screen.drawRectangle(10, 238, 310, 243);
+        do Screen.drawRectangle(10, 10, 15, 243);
+        do Screen.drawRectangle(305, 10, 310, 243);
+
+        // Internal maze walls.
+        do Screen.drawRectangle(60, 15, 70, 170);
+        do Screen.drawRectangle(60, 165, 180, 175);
+        do Screen.drawRectangle(120, 80, 180, 90);
+        do Screen.drawRectangle(170, 80, 180, 175);
+        do Screen.drawRectangle(230, 15, 240, 130);
+        do Screen.drawRectangle(230, 125, 300, 135);
+        do Screen.drawRectangle(280, 130, 290, 238);
+
+        do Main.drawExit();
+        return;
+    }
+
+    /** Draws the green exit square in the lower-right area. */
+    function void drawExit() {
+        do Screen.setColor(true);
+        do Screen.drawRectangle(270, 215, 300, 235);
+        do Output.moveCursor(15, 35);
+        do Output.printString("EXIT");
+        return;
+    }
+
+    /** Draws the player as a small square. */
+    function void drawPlayer(int x, int y) {
+        do Screen.setColor(false);
+        do Screen.drawRectangle(x, y, x + 8, y + 8);
+        return;
+    }
+
+    /**
+     * Returns true when the player's square overlaps a maze wall.
+     * Collision is checked using the four corners of the square.
+     */
+    function boolean isWall(int x, int y) {
+        if (x < 16) {
+            return true;
+        }
+        if (x > 297) {
+            return true;
+        }
+        if (y < 16) {
+            return true;
+        }
+        if (y > 230) {
+            return true;
+        }
+
+        if ((x < 70) & (x + 8 > 60)) {
+            if ((y < 170) & (y + 8 > 15)) {
+                return true;
+            }
+        }
+
+        if ((x < 180) & (x + 8 > 60)) {
+            if ((y < 175) & (y + 8 > 165)) {
+                return true;
+            }
+        }
+
+        if ((x < 180) & (x + 8 > 120)) {
+            if ((y < 90) & (y + 8 > 80)) {
+                return true;
+            }
+        }
+
+        if ((x < 180) & (x + 8 > 170)) {
+            if ((y < 175) & (y + 8 > 80)) {
+                return true;
+            }
+        }
+
+        if ((x < 240) & (x + 8 > 230)) {
+            if ((y < 130) & (y + 8 > 15)) {
+                return true;
+            }
+        }
+
+        if ((x < 300) & (x + 8 > 230)) {
+            if ((y < 135) & (y + 8 > 125)) {
+                return true;
+            }
+        }
+
+        if ((x < 290) & (x + 8 > 280)) {
+            if ((y < 238) & (y + 8 > 130)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /** Displays the final screen after the player reaches the exit. */
+    function void gameOver() {
+        var int key;
+        do Screen.clearScreen();
+        do Output.moveCursor(8, 16);
+        do Output.printString("YOU ESCAPED!");
+        do Output.moveCursor(10, 10);
+        do Output.printString("Congratulations!");
+        do Output.moveCursor(12, 7);
+        do Output.printString("Press Q to finish.");
+
+        while (true) {
+            let key = Keyboard.readKey();
+            if (key = 81) {
+                return;
+            }
+        }
+
+        return;
+    }
+}

@@ -1,0 +1,24 @@
+CHIP FanOut16N {
+    IN
+        a;
+    OUT
+        out[16];
+        
+    PARTS:
+    Nand(a= a, b= true, out= out[0] );
+    Nand(a= a, b= true, out= out[1] );
+    Nand(a= a, b= true, out= out[2] );
+    Nand(a= a, b= true, out= out[3] );
+    Nand(a= a, b= true, out= out[4] );
+    Nand(a= a, b= true, out= out[5] );
+    Nand(a= a, b= true, out= out[6] );
+    Nand(a= a, b= true, out= out[7] );
+    Nand(a= a, b= true, out= out[8] );
+    Nand(a= a, b= true, out= out[9] );
+    Nand(a= a, b= true, out= out[10]);
+    Nand(a= a, b= true, out= out[11]);
+    Nand(a= a, b= true, out= out[12]);
+    Nand(a= a, b= true, out= out[13]);
+    Nand(a= a, b= true, out= out[14]);
+    Nand(a= a, b= true, out= out[15]);
+}

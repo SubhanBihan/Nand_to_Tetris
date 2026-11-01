@@ -1,0 +1,31 @@
+class RandSeed {
+
+    function int getSeed() {
+
+        var int seed;
+        var int key;
+        var String msg;
+
+        let seed = 0;
+        let key = 0;
+        
+        // Prevent string leak by capturing the instance and disposing of it
+        let msg = "press a key to start";
+        do Output.printString(msg);
+        do Output.println();
+        do msg.dispose();
+
+        while(~key) {
+            let seed = seed + 1;
+            if( seed = 32767 ) {
+                let seed = 0;
+            }
+            let key = Keyboard.keyPressed();
+        }
+
+        do Screen.clearScreen();
+
+        return seed;
+    }
+
+}

@@ -1,0 +1,82 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+/**
+ * The Hack Central Processing unit (CPU).
+ * Parses the binary code in the instruction input and executes it according to the
+ * Hack machine language specification. In the case of a C-instruction, computes the
+ * function specified by the instruction. If the instruction specifies to read a memory
+ * value, the inM input is expected to contain this value. If the instruction specifies
+ * to write a value to the memory, sets the outM output to this value, sets the addressM
+ * output to the target address, and asserts the writeM output (when writeM = 0, any
+ * value may appear in outM).
+ * If the reset input is 0, computes the address of the next instruction and sets the
+ * pc output to that value. If the reset input is 1, sets pc to 0.
+ * Note: The outM and writeM outputs are combinational: they are affected by the
+ * instruction's execution during the current cycle. The addressM and pc outputs are
+ * clocked: although they are affected by the instruction's execution, they commit to
+ * their new values only in the next cycle.
+ */
+CHIP CPU {
+    
+    IN  inM[16],         // M value input  (M = contents of RAM[A])
+        instruction[16], // Instruction for execution
+        reset;           // Signals whether to re-start the current
+                         // program (reset==1) or continue executing
+                         // the current program (reset==0).
+
+    OUT outM[16],        // M value output
+        writeM,          // Write to M? 
+        addressM[15],    // Address in data memory (of M)
+        pc[15];          // address of next instruction
+    // NOTE: Last two are 15-bit, so need to strip off 1 bit from reg outputs
+    
+    PARTS:
+
+    // If instruction[15] = 1 -> C instr, else A instr
+    Not(in= instruction[15], out= IsAinstr);
+    
+    // writeM (load) logic: C-instr AND d0 = 1
+    And(a= instruction[15], b= instruction[3], out= writeM);
+
+    //// The Address register
+    Mux16(a= instruction, b= ALUOut, sel= instruction[15], out= ARegMuxOut);
+    // Load logic: A-instr OR (C-instr AND d2 = 1)
+    And(a= instruction[15], b= instruction[5], out= al1);
+    Or(a= IsAinstr, b= al1, out= ARegLoad);
+	ARegister(in= ARegMuxOut, load= ARegLoad, out= ARegOut, out[0..14]= addressM);
+
+    //// The Data Register
+    // Load logic: C-instr AND d1 = 1
+    And(a= instruction[15], b= instruction[4], out= DRegLoad);
+    DRegister(in= ALUOut, load= DRegLoad, out= DRegOut);
+
+    //// The ALU
+    // 2nd input to ALU chosen based on a
+    Mux16(a= ARegOut, b= inM, sel= instruction[12], out= ALUIn2);
+    
+    ALU(x= DRegOut, y= ALUIn2,
+        zx= instruction[11],
+        nx= instruction[10],
+        zy= instruction[9] ,
+        ny= instruction[8] ,
+        f=  instruction[7] ,
+        no= instruction[6] ,
+        out= ALUOut, out= outM, zr= zr, ng= ng);
+    
+    Not(in= zr, out= nzr);
+    Not(in= ng, out= nng);
+    And(a= nzr, b= nng, out= ps);
+
+    //// The Program Counter
+    // Minimized SOP found using Logisim
+    And(a= instruction[0], b= ps, out= pcl0);
+    And(a= instruction[1], b= zr, out= pcl1);
+    And(a= instruction[2], b= ng, out= pcl2);
+    Or(a= pcl0, b= pcl1, out= pcl01);
+    Or(a= pcl01, b= pcl2, out= pcl012);
+
+    And(a= pcl012, b= instruction[15], out= PCLoad);     // Ensure it's a C instr
+    
+    PC(in= ARegOut, load= PCLoad, inc= true, reset= reset, out[0..14]= pc);
+}

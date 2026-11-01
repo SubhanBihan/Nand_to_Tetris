@@ -1,0 +1,423 @@
+function SnakeGame.new 0
+    push constant 7
+    call Memory.alloc 1
+    pop pointer 0
+    call RandSeed.getSeed 0
+    call Random.setSeed 1
+    pop temp 0
+    push constant 0
+    pop this 2
+    push constant 1
+    pop this 3
+    push constant 0
+    pop this 4
+    push constant 0
+    pop this 5
+    push constant 100
+    pop this 6
+    push pointer 0
+    push constant 512
+    push constant 256
+    call SnakeGrid.new 3
+    pop this 1
+    push pointer 0
+    push this 1
+    call SnakeGrid.sizeX 1
+    push constant 2
+    call Math.divide 2
+    push this 1
+    call SnakeGrid.sizeY 1
+    push constant 2
+    call Math.divide 2
+    push constant 10
+    push constant 3
+    call Snake.new 5
+    pop this 0
+    push this 1
+    call SnakeGrid.placeFood 1
+    pop temp 0
+    push this 1
+    call SnakeGrid.drawStatus 1
+    pop temp 0
+    push pointer 0
+    return
+function SnakeGame.dispose 0
+    push argument 0
+    pop pointer 0
+    push this 0
+    call Snake.dispose 1
+    pop temp 0
+    push this 1
+    call SnakeGrid.dispose 1
+    pop temp 0
+    push pointer 0
+    call Memory.deAlloc 1
+    pop temp 0
+    push constant 0
+    return
+function SnakeGame.run 3
+    push argument 0
+    pop pointer 0
+    push constant 0
+    pop local 1
+label SnakeGame_0
+    push local 1
+    not
+    not
+    if-goto SnakeGame_1
+    push this 0
+    call Snake.rememberDir 1
+    pop temp 0
+    push this 4
+    not
+    if-goto SnakeGame_3
+    push constant 0
+    pop local 0
+label SnakeGame_4
+    push local 0
+    not
+    not
+    if-goto SnakeGame_5
+    push constant 0
+    pop local 2
+label SnakeGame_6
+    push local 2
+    not
+    not
+    if-goto SnakeGame_7
+    call Keyboard.keyPressed 0
+    pop local 2
+    goto SnakeGame_6
+label SnakeGame_7
+    push local 2
+    push constant 80
+    eq
+    not
+    if-goto SnakeGame_9
+    push constant 1
+    neg
+    pop local 0
+    push constant 0
+    pop this 4
+    goto SnakeGame_8
+label SnakeGame_9
+label SnakeGame_8
+    push local 2
+    push constant 81
+    eq
+    not
+    if-goto SnakeGame_11
+    push constant 1
+    neg
+    pop local 0
+    push constant 1
+    neg
+    pop local 1
+    goto SnakeGame_10
+label SnakeGame_11
+label SnakeGame_10
+    push this 1
+    call SnakeGrid.drawStatus 1
+    pop temp 0
+    push this 6
+    call Sys.wait 1
+    pop temp 0
+    goto SnakeGame_4
+label SnakeGame_5
+    goto SnakeGame_2
+label SnakeGame_3
+label SnakeGame_2
+    call Keyboard.keyPressed 0
+    pop local 2
+    push local 2
+    push constant 80
+    eq
+    not
+    if-goto SnakeGame_13
+    push constant 1
+    neg
+    pop this 4
+    goto SnakeGame_12
+label SnakeGame_13
+label SnakeGame_12
+    push local 2
+    push constant 81
+    eq
+    not
+    if-goto SnakeGame_15
+    push constant 1
+    neg
+    pop local 1
+    goto SnakeGame_14
+label SnakeGame_15
+label SnakeGame_14
+    push local 2
+    push constant 130
+    eq
+    not
+    if-goto SnakeGame_17
+    push this 0
+    call Snake.getLastDir 1
+    push constant 1
+    eq
+    not
+    if-goto SnakeGame_19
+    push this 0
+    push constant 3
+    call Snake.setDir 2
+    pop temp 0
+    goto SnakeGame_18
+label SnakeGame_19
+label SnakeGame_18
+    push this 0
+    call Snake.getLastDir 1
+    push constant 2
+    eq
+    not
+    if-goto SnakeGame_21
+    push this 0
+    push constant 3
+    call Snake.setDir 2
+    pop temp 0
+    goto SnakeGame_20
+label SnakeGame_21
+label SnakeGame_20
+    goto SnakeGame_16
+label SnakeGame_17
+label SnakeGame_16
+    push local 2
+    push constant 131
+    eq
+    not
+    if-goto SnakeGame_23
+    push this 0
+    call Snake.getLastDir 1
+    push constant 3
+    eq
+    not
+    if-goto SnakeGame_25
+    push this 0
+    push constant 1
+    call Snake.setDir 2
+    pop temp 0
+    goto SnakeGame_24
+label SnakeGame_25
+label SnakeGame_24
+    push this 0
+    call Snake.getLastDir 1
+    push constant 4
+    eq
+    not
+    if-goto SnakeGame_27
+    push this 0
+    push constant 1
+    call Snake.setDir 2
+    pop temp 0
+    goto SnakeGame_26
+label SnakeGame_27
+label SnakeGame_26
+    goto SnakeGame_22
+label SnakeGame_23
+label SnakeGame_22
+    push local 2
+    push constant 132
+    eq
+    not
+    if-goto SnakeGame_29
+    push this 0
+    call Snake.getLastDir 1
+    push constant 1
+    eq
+    not
+    if-goto SnakeGame_31
+    push this 0
+    push constant 4
+    call Snake.setDir 2
+    pop temp 0
+    goto SnakeGame_30
+label SnakeGame_31
+label SnakeGame_30
+    push this 0
+    call Snake.getLastDir 1
+    push constant 2
+    eq
+    not
+    if-goto SnakeGame_33
+    push this 0
+    push constant 4
+    call Snake.setDir 2
+    pop temp 0
+    goto SnakeGame_32
+label SnakeGame_33
+label SnakeGame_32
+    goto SnakeGame_28
+label SnakeGame_29
+label SnakeGame_28
+    push local 2
+    push constant 133
+    eq
+    not
+    if-goto SnakeGame_35
+    push this 0
+    call Snake.getLastDir 1
+    push constant 3
+    eq
+    not
+    if-goto SnakeGame_37
+    push this 0
+    push constant 2
+    call Snake.setDir 2
+    pop temp 0
+    goto SnakeGame_36
+label SnakeGame_37
+label SnakeGame_36
+    push this 0
+    call Snake.getLastDir 1
+    push constant 4
+    eq
+    not
+    if-goto SnakeGame_39
+    push this 0
+    push constant 2
+    call Snake.setDir 2
+    pop temp 0
+    goto SnakeGame_38
+label SnakeGame_39
+label SnakeGame_38
+    goto SnakeGame_34
+label SnakeGame_35
+label SnakeGame_34
+    push this 0
+    call Snake.tryMove 1
+    not
+    not
+    if-goto SnakeGame_41
+    push this 1
+    call SnakeGrid.drawCrashed 1
+    pop temp 0
+    call Sys.halt 0
+    pop temp 0
+    goto SnakeGame_40
+label SnakeGame_41
+label SnakeGame_40
+    push this 1
+    push this 0
+    call Snake.posX 1
+    push this 0
+    call Snake.posY 1
+    call SnakeGrid.checkFood 3
+    not
+    if-goto SnakeGame_43
+    push this 0
+    call Snake.eatFood 1
+    pop temp 0
+    push pointer 0
+    call SnakeGame.nextLevel 1
+    pop temp 0
+    push this 1
+    call SnakeGrid.placeFood 1
+    pop temp 0
+    goto SnakeGame_42
+label SnakeGame_43
+label SnakeGame_42
+    push this 0
+    push this 5
+    call Snake.grow 2
+    pop temp 0
+    push this 1
+    call SnakeGrid.drawFood 1
+    pop temp 0
+    push this 1
+    call SnakeGrid.drawStatus 1
+    pop temp 0
+    push this 6
+    call Sys.wait 1
+    pop temp 0
+    push pointer 0
+    call SnakeGame.nextCycle 1
+    pop temp 0
+    push this 0
+    call Snake.checkRewriteHistory 1
+    not
+    if-goto SnakeGame_45
+    push this 0
+    call Snake.getLength 1
+    pop this 5
+    goto SnakeGame_44
+label SnakeGame_45
+label SnakeGame_44
+    goto SnakeGame_0
+label SnakeGame_1
+    push this 1
+    call SnakeGrid.drawDone 1
+    pop temp 0
+    call Sys.halt 0
+    pop temp 0
+    push constant 0
+    return
+function SnakeGame.nextLevel 0
+    push argument 0
+    pop pointer 0
+    push this 2
+    push constant 10
+    push this 3
+    call Math.multiply 2
+    add
+    pop this 2
+    push this 3
+    push constant 1
+    add
+    pop this 3
+    push this 6
+    push constant 30
+    gt
+    not
+    if-goto SnakeGame_47
+    push this 6
+    push constant 5
+    sub
+    pop this 6
+    goto SnakeGame_46
+label SnakeGame_47
+label SnakeGame_46
+    push constant 0
+    return
+function SnakeGame.nextCycle 0
+    push argument 0
+    pop pointer 0
+    push this 5
+    push constant 1
+    add
+    pop this 5
+    push this 5
+    return
+function SnakeGame.getGrid 0
+    push argument 0
+    pop pointer 0
+    push this 1
+    return
+function SnakeGame.getSnake 0
+    push argument 0
+    pop pointer 0
+    push this 0
+    return
+function SnakeGame.getCycle 0
+    push argument 0
+    pop pointer 0
+    push this 5
+    return
+function SnakeGame.getScore 0
+    push argument 0
+    pop pointer 0
+    push this 2
+    return
+function SnakeGame.getLevel 0
+    push argument 0
+    pop pointer 0
+    push this 3
+    return
+function SnakeGame.getPaused 0
+    push argument 0
+    pop pointer 0
+    push this 4
+    return
